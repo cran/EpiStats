@@ -4,7 +4,7 @@
 
 \title{ Univariate analysis of cohort study measuring risk }
 \description{
-CS analyses cohort studies with equal follow-up time per subject. The risk (the proportion of individuals who become cases) is calculated overall and among the exposed and unexposed. 
+CS analyses cohort studies with equal follow-up time per subject. The risk (the proportion of individuals who become cases) is calculated overall and among the exposed and unexposed.
 Note that all variables need to be numeric and binary and coded as "0" and "1".
 
 Point estimates and confidence intervals for the risk ratio and risk difference are calculated, along with attributable or preventive fractions for the exposed and the total population.
@@ -33,7 +33,7 @@ CS(x, cases, exposure, exact = F, full = FALSE, title = "CS")
   \item{df1.digits}{integer vector - digit number displayed for kable/xtable}
   \item{df2.digits}{integer vector - digit number displayed for kable/xtable}
   \item{df2.align}{character - alignment for kable/xtable}
-  
+
 The item st returns the risk difference and its 95 percent confidence intervals, the risk ratio and its 95 percent confidence intervals, the attributable fraction among the exposed and its 95 percent confidence intervals, the attributable fraction among the population and its 95 percent confidence intervals, the Chi square value, the Chi square p-value and the Fisher's exact test p-value.
 }
 
@@ -54,7 +54,7 @@ library(EpiStats)
 data(Tiramisu)
 DF <- Tiramisu
 
-# The CS command looks at the association between the outcome variable "ill" 
+# The CS command looks at the association between the outcome variable "ill"
 # and an exposure "mousse"
 CS(DF, "ill", "mousse")
 

@@ -10,7 +10,7 @@
   
   Note that the outcome and exposure variable need to be numeric and binary and coded as "0" and 1". The third variable needs to be numeric, but may have more categories, such as "0", "1" and "2".}
 \usage{
-CCInter(x, cases, exposure, by, full)
+CCInter(x, cases, exposure, by, table = FALSE, full = FALSE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -18,7 +18,8 @@ CCInter(x, cases, exposure, by, full)
   \item{cases}{ string: case binary variable (0 / 1) }
   \item{exposure}{ string: exposure binary variable (0 / 1) }
   \item{by}{ string: stratifying variable (a factor) }
-    \item{full}{boolean - TRUE if you need to display useful values for formatting}
+  \item{table}{boolean - TRUE if you need to display interaction table}
+  \item{full}{boolean - TRUE if you need to display useful values for formatting}
 }
 
 \value{list:

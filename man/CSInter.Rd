@@ -6,7 +6,7 @@
 \description{CSInter is useful to determine the effects of a third variable on the association between an exposure and an outcome.  CSInter produces 2 by 2 tables with stratum specific risk ratios, attributable risk among exposed and population attributable risk. Note that the outcome and exposure variable need to be numeric  and binary and coded as "0" and 1". The third variable needs to be numeric, but may have more categories, such as "0", "1" and "2".
 }
 \usage{
-CSInter(x, cases, exposure, by, full)
+CSInter(x, cases, exposure, by, table = FALSE, full = FALSE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -14,6 +14,7 @@ CSInter(x, cases, exposure, by, full)
   \item{cases}{ string: illness binary variable (0 / 1) }
   \item{exposure}{ string: exposure binary variable (0 / 1) }
   \item{by}{ string: stratifying variable (a factor) }
+  \item{table}{boolean - TRUE if you need to display interaction table}
   \item{full}{boolean - TRUE if you need to display useful values for formatting}
 }
 \details{CSInter is useful to determine the effects of a third variable on the association between an exposure and an outcome.  CSInter produces 2 by 2 tables with stratum specific risk ratios, attributable risk among exposed and population attributable risk. Note that the outcome and exposure variable need to be numeric  and binary and coded as "0" and 1". The third variable needs to be numeric, but may have more categories, such as "0", "1" and "2".

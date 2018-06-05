@@ -8,6 +8,7 @@ ccinter <- CCInter <- function(  x,
                       cases,
                       exposure,
                       by,
+                      table = FALSE,
                       full = FALSE
 ) UseMethod("CCInter", x)
 
@@ -15,6 +16,7 @@ CCInter.data.frame <- function(  x,
                                  cases,
                                  exposure,
                                  by,
+                                 table = FALSE,
                                  full = FALSE
 )
 {
@@ -29,7 +31,17 @@ CCInter.data.frame <- function(  x,
   
   NB_TOTAL    <- 0
   
+  T.Controls  <- c()
+  T.Cases     <- c()
+  T.OR        <- c()
+  T.Marks     <- c("++","+-","-+","reference   --", "Total")
+  T.TCA <- 0
+  T.TCO <- 0
+  
+  
   .strate <- as.factor(x[,by])
+  .strateError = "One of your strata has zero cases in the cells."
+  
   .df <- x
   # Return labels of columns of the output data.frame
   # ---------------------------------------------------------------------------
@@ -75,14 +87,35 @@ CCInter.data.frame <- function(  x,
   # Loop on all levels of 'by' (strates)
   # -----------------------------------------------------------------
   getRRStats <- function() {
-    
-    .T = table(!x[, exposure], !x[, cases], .strate)
+    if (!is.factor(x[, cases])) {
+      .T = table(!x[, exposure], !x[, cases], .strate)
+    } else {
+      .d <- x
+      .d[, cases] <- 1 - (as.numeric(x[, cases])-1)
+      .d[, exposure] <- 1 - (as.numeric(x[, exposure])-1)
+      .T = table(.d[, exposure], .d[, cases], .strate)
+    }
     .loop = length(levels(.strate))
-    .T <- toNumeric(.T, .loop)
+    .Compute = TRUE
+    .T <- .T1 <- toNumeric(.T, .loop)
+
+    retrieveLast <- function(.T) {
+      i <- length(.T[1,2,])
+      if (.T[1,1, i] == 0 | .T[2,1, i] == 0 | .T[1,2, i] == 0 | .T[2,2, i] == 0) {
+        msg <- sprintf("Stratum %d has values = 0 and has been removed", i)
+        warning(msg)
+        .T <- .T[, , -i]
+        .T <- retrieveLast(.T)
+      }
+      .T
+    }
+    
+    .T <- retrieveLast(.T)
     S_  <- summary(epi.2by2(.T, method = "case.control",
                             outcome="as.columns",
                             homogeneity = "woolf"))
-     # print(S_)
+
+    .loop = length(.T[1,2,])
     NB_LEVELS = .loop
     .ind <- .loop:1
     for (i in .loop:1) {
@@ -114,6 +147,14 @@ CCInter.data.frame <- function(  x,
       EXPOSED_PC <- sprintf("%3.1f%%", (B_HE / TOTAL) * 100)
       L_CONTROLS <- c(L_CONTROLS, TOTAL, EXPOSED_PC, NA);
 
+      if (i < 3) {
+        T.Cases <- c(T.Cases, A_CE, C_CU)
+        T.Controls <- c(T.Controls, B_HE, D_HU)
+        T.OR  <- c(T.OR, NA, NA)
+        T.TCA <- T.TCA + A_CE + C_CU
+        T.TCO <- T.TCO + B_HE + D_HU
+      }
+      
       # ODDS RATIO
       # ------------------------------------------------------------
       num <- NULL
@@ -168,6 +209,13 @@ CCInter.data.frame <- function(  x,
         L_STATS <- c(L_STATS, AFP, NA, NA, NA)
       }
     }
+    
+    if (table == TRUE) {
+      T.Cases <- c(T.Cases, T.TCA)
+      T.Controls <- c(T.Controls, T.TCO)
+      T.OR  <- c(T.OR, NA)
+    }
+    
 
     # Number of obs
     # ------------------------------------------------------------
@@ -194,7 +242,6 @@ CCInter.data.frame <- function(  x,
     df <- x[!is.na(x[,exposure]),]
     df <- df[!is.na(df[,by]),]
     df <- df[!is.na(df[,cases]),]
-    
     
     .T <- table(df[,cases], df[,exposure], df[,by]);
     .T <- toNumeric(.T, .loop)
@@ -238,12 +285,66 @@ CCInter.data.frame <- function(  x,
     DF2 <- data.frame(L_LABELS1, S2(L_STATS), S2(L_CIL), S2(L_CIH))
     colnames(DF2) <- getColnames2()
     
+    if (table == TRUE) {
+      .Col1 <- sprintf("%s / %s", by, exposure)
+      T.Col <- c(.Col1, "Cases", "Controls", "OR")
+      
+      P11 <- T.Cases[1] / (T.Cases[1]+T.Controls[1])
+      P10 <- T.Cases[2] / (T.Cases[2]+T.Controls[2])
+      P01 <- T.Cases[3] / (T.Cases[3]+T.Controls[3])
+      P00 <- T.Cases[4] / (T.Cases[4]+T.Controls[4])
+      
+      # print(P11 - P10 - P01 + 1)
+      OR11 <- (P11/(1-P11)) / (P00/(1-P00))
+      OR10 <- (P10/(1-P10)) / (P00/(1-P00))
+      OR01 <- (P01/(1-P01)) / (P00/(1-P00))
+      T.OR <- c(round(OR11,2), round(OR10,2), round(OR01,2), NA, NA)
+      
+      DF3 <- data.frame(T.Marks, T.Cases, T.Controls, T.OR)
+      colnames(DF3) <- T.Col
+      
+      # -------------------- STATS -------------------------------------------
+      # local _inter = (`_rr10' -1) + (`_rr01' - 1) + 1
+      # inter = (`_rr11' - 1 ) - (`_rr10' -1) - (`_rr01' - 1)
+      .Labs <- c("Observed OR when exposed to both",
+                 "Expected OR if exposed to both and no interaction",
+                 "Interaction")
+      S.OBOR <- OR11
+      S.EXOR <- (OR10 - 1) + (OR01 - 1) + 1
+      S.INTR <- OR11 - S.EXOR
+      
+      DF4 = data.frame(.Labs, c(round(S.OBOR,2), round(S.EXOR,2), round(S.INTR,2)))
+      colnames(DF4) <- c("Statistic","Value")
+      
+    }
     if (full == TRUE) {
-      ret <- list(df1 = DF1, df2 = DF2,
-                  df1.align = "rrrrrr",
-                  df2.align = "rrrr")
+      if (.Compute == TRUE) {
+        ret <- list(df1 = DF1, df2=DF2, df1.align="lccrlrrr", df2.align="lccrrr")
+      } else {
+        ret <- list(df1 = DF1, df2=.strateError, df1.align="lccrlrrr", df2.align="lccrrr")
+      }
+      if (table == TRUE) {
+        if (.Compute == TRUE) {
+          ret <- list(df1 = DF1, df2=DF2, df1.align="lccrlrrr", df2.align="lccrrr",
+                      df3 = DF3, df4 = DF4)
+        } else {
+          ret <- list(df1 = DF1, df2=.strateError, df1.align="lccrlrrr", df2.align="lccrrr",
+                      df3 = DF3, df4 = DF4)
+        }
+      }
     } else {
-      ret <- list(df1 = DF1, df2 = DF2)
+      if (.Compute == TRUE) {
+        ret <- list(df1 = DF1, df2=DF2)
+      } else {
+        ret <- list(df1 = DF1, df2=.strateError)
+      }
+      if (table == TRUE) {
+        if (.Compute == TRUE) {
+          ret <- list(df1 = DF1, df2=DF2, df3 = DF3, df4 = DF4)
+        } else {
+          ret <- list(df1 = DF1, df2=.strateError, df3 = DF3, df4 = DF4)
+        }
+      }
     }    
 
     ret
