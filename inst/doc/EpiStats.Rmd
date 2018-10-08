@@ -10,7 +10,7 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-devtools
+
 --------------------------------------------------------------------------------------------
 
 Epiconcept is made up of a team of doctors, epidemiologists, data scientists and digital specialists.
@@ -52,12 +52,14 @@ Its current customers and partners include some of the greatest names in the wor
 ## Description
 
 The EpiStats package is a set of functions aimed at epidemiologists. They include commands for measures of association and impact for case control studies and cohort studies. They may be particularly useful for outbreak investigations and include univariate and stratified analyses.
-    
-The functions for cohort studies include the CS, CSTable and CSInter commands. 
 
-The functions for case control studies include the CC, CCTable and CCInter commands. 
+The generic function *crossTable* provides a contingency table with optional parameters *percent* and *statistic*
 
-All variables used need to be numeric binary variables and coded as “0” and “1”.
+The functions for cohort studies include the *CS*, *CSTable* and *CSInter* commands. 
+
+The functions for case control studies include the *CC*, *CCTable* and *CCInter* commands. 
+
+All variables used need to be numeric binary variables and coded as 0 and 1 or as factors.
     
 ## Cohort study functions:
 
@@ -136,9 +138,55 @@ Colnames <- DF %>%
   select(-ill, -age, -dateonset, -uniquekey, -tportion, -mportion) %>% 
   colnames()
 
+```
+
+\newpage
+## crossTable
+Creates a contingency table of variable of interest and exposure. Percentage are optionals by *row* or by *column*. It can provides an optional statistic (*fisher* or *chisquare*).
+
+### Syntax
+
+**crosTable**(data, var1, var2, percent="none", statistic="none")
+
+### Examples
+Recoding some data to have ordered factors
+```{r}
+DF$ill <- factor(DF$ill, levels=c(1,0), ordered = TRUE)
+DF$sex <- factor(DF$sex, levels = c("males", "females"), ordered = TRUE)
+```
+
+### Example 1: crossTable ill - sex
+
+```{r}
+ret <- crossTable(DF, var1="ill", var2="tira")
+ret
+kable(ret, align="r")
+```
+
+### Example 2: crossTable ill - sex with column percentage and chi2 stat
+```{r}
+ret <- crossTable(DF, "ill", "sex", "col", "chi2")
+kable(ret, align="r", caption = "with columns %")
+```
+
+\newpage
+### Example 3: CrossTable ill - sex with row percentage and Fisher stat
+NB: All parameters are unquoted
+```{r}
+ret <- crossTable(DF, ill, sex, row, fisher)
+ret
+kable(ret, align="r", caption = "with rows %")
 
 ```
 
+## CrossTable beer - sex with column and row percentages and Chi2 stat
+NB: All parameters are unquoted
+```{r}
+ret <- crossTable(DF, beer, sex, both, chi2)
+ret
+kable(ret, align="r", caption = "% rows and columns")
+
+```
 
 \newpage
 ## CS
@@ -320,6 +368,7 @@ The following results tables are outputs in "markdown" using the kable function.
 result <- CC(DF, "ill", "beer", exact = TRUE, full = TRUE)
 kable(result$df1, align="r")
 kable(result$df2, align=result$df2.align)
+
 ```
 
 By storing the results in the object "result", you are able to use the result tables in Markdown as shown above. By specifying "full = TRUE" you can also easily use individual elements of the results.For example if you would like to view just the odds ratio, you can view it by typing:
@@ -444,3 +493,17 @@ By storing the results in the object "res", you are able to use the result table
 res$df2$Stats[3]
 ```
 
+
+```{r echo=FALSE, eval=FALSE}
+test <- function(data, cases, exposure) {
+  .cases <- as.character(substitute(cases))
+  print(.cases)
+  data[, .cases]
+}
+# with(DF,
+test(Tiramisu, "ill", tira)
+# )
+```
+
+
+)

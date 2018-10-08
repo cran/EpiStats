@@ -1,6 +1,7 @@
 \name{CC}
 \alias{CC}
 \alias{cc}
+
 %- Also NEED an '\alias' for EACH other topic documented here.
 
 \title{Univariate analysis of case control studies}
@@ -16,11 +17,11 @@
 If you specify full = TRUE you can easily access useful statistics from the output tables.}
 
 \usage{
-CC(x, cases, exposure, exact = FALSE, full = FALSE, title = "CC")
+CC(data, cases, exposure, exact = FALSE, full = FALSE, title = "CC")
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{x}{data.frame}
+  \item{data}{data.frame}
   \item{cases}{character - Case variable}
   \item{exposure}{character - Exposure variable}
   \item{exact}{boolean - TRUE if you would like to display Fisher's exact p-value}

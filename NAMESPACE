@@ -6,11 +6,13 @@ export(
   CSInter, csinter,
   CC, cc,
   CCTable, cctable,
-  CCInter, ccinter
+  CCInter, ccinter,
+  crossTable,
+  orderFactors
 )
 
 
-import(epiR, 
+import(epiR,
        dplyr
 )
 

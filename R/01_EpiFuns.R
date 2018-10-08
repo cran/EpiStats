@@ -228,5 +228,38 @@ MH_HomogeneityTest <- function(mht)
 #   return(c(t$statistic, t$p.value));
 # }
 
+getVarsList <- function(list) {
+  input <- as.list(list)
+  if (length(input) < 2) {
+    return(NULL)
+  }
+  .L <- length(input)
+  input <- input[2:.L]
+  .mode <- mode(input[[1]])
+  # ---- .mode == "name" : we have one or more variable
+  # ---------------------------------------------------
+  if (.mode == "name") {
+    ret <- c()
+    for (v in input) {
+      ret <- c(ret, as.character(v))
+    }
+#    cat("1 ===> ", ret, "\n")
+    return(ret)
+  }
+  if (.mode == "call") {
+    ret <- eval(as.vector(input[[1]]))
+#    cat("2 ===> ", ret, "\n")
+    return(ret)
+  }
+  
+  if (.mode == "character" | .mode == "numeric") {
+    ret <- c()
+    for (v in input) {
+      ret <- c(ret, v)
+    }
+#    cat("3 ===> ", ret, "\n")
+    return(ret)
+  }
+}
 
 

@@ -1,12 +1,12 @@
-cc <- CC <- function(  x,
-                 cases,
-                 exposure,
-                 exact = FALSE,
-                 full = FALSE,
-                 title = "CC"
-) UseMethod("CC", x)
+cc <- CC <- function( data,
+                      cases,
+                      exposure,
+                      exact = FALSE,
+                      full = FALSE,
+                      title = "CC"
+) UseMethod("CC", data)
 
-CC.data.frame <- function(  x,
+CC.data.frame <- function(  data,
                             cases,
                             exposure,
                             exact = F,
@@ -14,9 +14,11 @@ CC.data.frame <- function(  x,
                             title = "CC"
 )
 {
+  .cases <- as.character(substitute(cases))
+  .expos <- as.character(substitute(exposure))
   
-  .Cases <- x[, cases]
-  .Exposure <- x[, exposure]
+  .Cases <- data[, .cases]
+  .Exposure <- data[, .expos]
   .T1 = title
   .T2 = title
   
@@ -48,7 +50,7 @@ CC.data.frame <- function(  x,
   TU = I0E0 + I1E0        ; # Total unexposed
   TCA = I1E1 + I1E0       ; # Total cases
   TNC = I0E1 + I0E0       ; # Total non-cases
-
+  
   
   
   # Compute Proportions
@@ -63,7 +65,7 @@ CC.data.frame <- function(  x,
   #COL_R <- c(PCAEX, PCTEX, PTOEX)
   R1 <- data.frame(COL_C, COL_N, COL_T, row.names = Rownames1)
   colnames(R1) <- Colnames1
-
+  
   
   # Estimate
   # ===========================================================================
@@ -78,7 +80,7 @@ CC.data.frame <- function(  x,
   
   
   rr = list(point_estimate = R, CI95.ll = ORCIL, CI95.ul = ORCIH)
-
+  
   # Attr.frac.pop. <- Attr.frac.ex. x proportion.of.cases.exposed.
   # Prev.frac.pop. <- Prev.frac.ex. x proportion.of.controls.exposed
   if (R[1] >= 1.0) {
@@ -88,10 +90,10 @@ CC.data.frame <- function(  x,
     AFEST = as.numeric((ODD-1) / ODD)
     AFCIL = as.numeric(R$AFest[2])
     AFCIH = as.numeric(round(R$AFest[3], 8))
-
+    
     PAEST <- AFEST * PCAEX
     Rownames2 <- c("Odds ratio", "Attr. frac. ex.", "Attr. frac. pop", PLabel)
-
+    
     RES <- c(point_estimate = AFEST, CI95.ll = AFCIL, CI95.ul = AFCIH)
     
     stats = list(odds_ratio=rr,
@@ -104,7 +106,7 @@ CC.data.frame <- function(  x,
     AFEST = as.numeric(1 - R[1])
     AFCIL = 1 - R[3]
     AFCIH = 1 - R[2]
-
+    
     # Pe = TE / (TE + TU);
     # PAEST = Pe * (1 - R[1])
     PAEST <- AFEST * PCTEX
@@ -126,7 +128,7 @@ CC.data.frame <- function(  x,
   .COL_PES <- c(S2(OREST), S2(AFEST), S2(PAEST), S2(as.numeric(STAT[1])), str_PCHI2)
   .COL_CIL <- c(ORCIL, AFCIL, NA, NA, NA) 
   .COL_CIH <- c(ORCIH, AFCIH, NA, NA, NA)
-
+  
   if (exact == TRUE) {
     .COL_PES <- c(.COL_PES, str_FISH)
     .COL_CIL <- c(.COL_CIL, NA)
@@ -144,7 +146,7 @@ CC.data.frame <- function(  x,
   } else {
     ret <- list(df1 = R1, df2 = R2) 
   }
-
+  
   ret
   
 }
