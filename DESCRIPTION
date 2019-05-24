@@ -1,7 +1,7 @@
 Package: EpiStats
 Type: Package
 Title: Tools for Epidemiologists
-Version: 1.2-2
+Version: 1.3-1
 Date: 2019-05-23
 Authors@R: c(person("Jean Pierre", "Decorps", role = c("aut", "cre"),
                      email = "jp.decorps@epiconcept.fr"),
@@ -18,9 +18,9 @@ Depends: epiR, dplyr
 Suggests: knitr, rmarkdown
 VignetteBuilder: knitr
 NeedsCompilation: no
-Packaged: 2019-05-23 15:47:55 UTC; JDS
+Packaged: 2019-05-24 17:35:04 UTC; JDS
 Author: Jean Pierre Decorps [aut, cre],
   Esther Kissling [ctb]
 Maintainer: Jean Pierre Decorps <jp.decorps@epiconcept.fr>
 Repository: CRAN
-Date/Publication: 2019-05-24 15:40:06 UTC
+Date/Publication: 2019-05-24 23:51:04 UTC

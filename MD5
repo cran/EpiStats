@@ -1,4 +1,4 @@
-45f83d04b6f159e211a4a5d4a84da878 *DESCRIPTION
+b05f581b544bd5d76571e6041734cd73 *DESCRIPTION
 e77ad693a99f810e01cc6cd8f179e084 *NAMESPACE
 d46758b7a826fb1748d85946f7e324f5 *R/01_EpiFuns.R
 897f5a4aab800fbeb4ffc2f4afa134b7 *R/CCInter_.R
@@ -15,7 +15,7 @@ b2fcccebb2bd07bb53536b403ac04415 *README.md
 2f559d2c20c3ec992149855d6bda4ee1 *data/Tiramisu.rda
 2a00bb71be85a20af685de967adedf5e *inst/doc/EpiStats.R
 719330e3bc4b4ccacbe9203026f5765a *inst/doc/EpiStats.Rmd
-1d23214e4d65cd1590c001a07ffef79f *inst/doc/EpiStats.pdf
+9a32fd00bd8e1a7dd3232eada57f4ea8 *inst/doc/EpiStats.pdf
 d2b5e6270fe0343c24ee4046bd82603b *man/CC.Rd
 e73808c1c5f88faa3c876cd805136fbf *man/CCInter.Rd
 869c04081cdf857097c28e3c4dfa2cf5 *man/CCTable.Rd
