@@ -122,7 +122,7 @@ library(dplyr)
 library(knitr)
 
 options(knitr.kable.NA = '')
-options(width=200)
+#options(width=200)
 
 data(Tiramisu)
 DF <- Tiramisu
@@ -151,21 +151,25 @@ Creates a contingency table of variable of interest and exposure. Percentage are
 ### Examples
 Recoding some data to have ordered factors
 ```{r}
-DF$ill <- factor(DF$ill, levels=c(1,0), ordered = TRUE)
-DF$sex <- factor(DF$sex, levels = c("males", "females"), ordered = TRUE)
+DF2 <- DF
+DF2$ill <- factor(DF2$ill, levels=c(1,0), ordered = TRUE)
+DF2$beer <- factor(DF2$beer, levels=c(1,0), ordered = TRUE)
+DF2$tira <- factor(DF2$tira, levels=c(1,0), ordered = TRUE)
+DF2$sex <- factor(DF2$sex, levels = c("males", "females"), ordered = TRUE)
+
 ```
 
-### Example 1: crossTable ill - sex
+### Example 1: crossTable ill - tira
 
 ```{r}
-ret <- crossTable(DF, var1="ill", var2="tira")
+ret <- crossTable(DF2, var1="ill", var2="tira")
 ret
 kable(ret, align="r")
 ```
 
 ### Example 2: crossTable ill - sex with column percentage and chi2 stat
 ```{r}
-ret <- crossTable(DF, "ill", "sex", "col", "chi2")
+ret <- crossTable(DF2, "ill", "sex", "col", "chi2")
 kable(ret, align="r", caption = "with columns %")
 ```
 
@@ -173,16 +177,16 @@ kable(ret, align="r", caption = "with columns %")
 ### Example 3: CrossTable ill - sex with row percentage and Fisher stat
 NB: All parameters are unquoted
 ```{r}
-ret <- crossTable(DF, ill, sex, row, fisher)
+ret <- crossTable(DF2, ill, sex, row, fisher)
 ret
-kable(ret, align="r", caption = "with rows %")
+kable(ret, align="r")
 
 ```
 
 ## CrossTable beer - sex with column and row percentages and Chi2 stat
 NB: All parameters are unquoted
 ```{r}
-ret <- crossTable(DF, beer, sex, both, chi2)
+ret <- crossTable(DF2, beer, sex, both, chi2)
 ret
 kable(ret, align="r", caption = "% rows and columns")
 
@@ -212,9 +216,9 @@ CS(DF, "ill", "mousse", exact = FALSE)
 
 The following results tables are outputs in "markdown" using the *kable* function.
 
-```{r results='asis'}
+```{r }
 result <- CS(DF, "ill", "beer", exact = TRUE, full = TRUE)
-kable(result$df1)
+kable(result$df1, align = "r")
 kable(result$df2, align = result$df2.align )
 ```
 
@@ -429,7 +433,7 @@ kable(res$df)
 By storing the results in the object "res", you are able to use the result table in Markdown as shown above. You can also use individual elements of the results. For example if you would like to view just the odds ratio, you can view it by typing (for example):
 
 ```{r}
-res$df$`Odds Ratio`[1]
+res$df$OR[1]
 ```
 
 

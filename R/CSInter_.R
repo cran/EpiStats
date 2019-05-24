@@ -1,6 +1,6 @@
 # ===========================================================================
 # Method : CSInter
-# Description : 
+# Description :
 # Author : jp.decorps@epiconcept.fr
 # ===========================================================================
 
@@ -38,7 +38,7 @@ CSInter.data.frame <- function(  x,
   T.Cases     <- c()
   T.Risk      <- c()
   T.Marks     <- c("++","+-","-+","--")
-  
+
   .strate <- as.factor(x[,by])
   .strateError = "One of your strata has zero cases in the cells. You cannot properly compute the MH-adjusted RR."
 
@@ -48,7 +48,7 @@ CSInter.data.frame <- function(  x,
     .Col1Label = sprintf("CSInter %s - %s by(%s)", cases, exposure, by);
     c(.Col1Label, "Total", "Cases", "Risk %", "P.est.","Stats", "95%CI-ll", "95%CI-ul");
   }
-  
+
   getPestNames <- function(riskdiff) {
     if (riskdiff > 0) {
       c("Risk difference", "Risk Ratio", "Attrib.risk.exp", "Attrib.risk.pop")
@@ -56,26 +56,26 @@ CSInter.data.frame <- function(  x,
       c("Risk difference", "Risk ratio", "Prev. frac. ex.", "Prev. frac. pop")
     }
   }
-  
+
   # Returns labels for each level of 'by'
   # ---------------------------------------------------------------------------
   getRisksLabels <- function(.level) {
     .label = sprintf("%s = %s", by, .level);
     c(.label, "Exposed", "Unexposed", "")
   }
-  
+
   getMHLabels <- function() {
     label2 = sprintf("Crude RR for %s", exposure);
-    label3 = sprintf("MH RR %s adjusted for %s", exposure, by);  
+    label3 = sprintf("MH RR %s adjusted for %s", exposure, by);
     c("Woolf test of homogeneity",
       label2, label3, "Adjusted/crude relative change")
   }
-  
+
 
   # Loop on all levels of 'by' (strates)
   # -----------------------------------------------------------------
   getRRStats <- function() {
-    
+
     .loop = length(levels(.strate))
     .Compute = TRUE
     NB_LEVELS = .loop
@@ -85,7 +85,7 @@ CSInter.data.frame <- function(  x,
       .T = toNumeric(.T, 1)
       L_TAB <- c(L_TAB, GetStrateVector(.T))
       L_LABELS1 <- c(L_LABELS1, getRisksLabels(.level))
-      
+
       TE = .T[2,1]+.T[2,2];
       TU = .T[1,1]+.T[1,2];
       CE = .T[2,2];
@@ -102,13 +102,13 @@ CSInter.data.frame <- function(  x,
         T.Cases <- c(T.Cases, CE, CU)
         T.Risk  <- c(T.Risk, (CE/TE)*100, (CU/TU)*100)
       }
-      
+
       # Risk %
       # -------------------------------------------------------------
       RE = CE / TE
       RU = CU / TU
       L_RISK <- c(L_RISK, NA, (RE * 100), (RU * 100), NA)
-      
+
       # Statistics - 95%CI-L - 95%CI-H
       # -------------------------------------------------------------
       # RDF : Risk difference ---------------------------------------
@@ -116,7 +116,7 @@ CSInter.data.frame <- function(  x,
       CI <- computeDiffRiskCI(RE, RU, TE, TU)
       RDFCIL = CI[1]
       RDFCIH = CI[2]
-      
+
       # RR : Risk Ratio ---------------------------------------------
       .R <- rr(.T);
       RR    = .R[1];
@@ -126,13 +126,13 @@ CSInter.data.frame <- function(  x,
       # P.est.
       # -------------------------------------------------------------
       L_ESTIMATE <- c(L_ESTIMATE, getPestNames(RDF))
-      
+
       if (RDF > 0) {
         # ARE : Attrib.risk.exp -------------------------------------
         AFE = RDF / RE;
         AFECIL = (RRCIL - 1) / RRCIL
         AFECIH = (RRCIH - 1) / RRCIH
-        
+
         # AFP -------------------------------------------------------
         .RT = (CE + CU)/TO
         AFP = (.RT-RU)/.RT
@@ -141,17 +141,17 @@ CSInter.data.frame <- function(  x,
         AFE = 1 - RR;
         AFECIL = 1 - RRCIH
         AFECIH = 1 - RRCIL
-        
+
         # Prev.frac.pop ---------------------------------------------
         Pe = TE / (TE + TU);
         AFP = Pe * (1 - RR);
       }
-      
+
       L_STATS <- c(L_STATS, RDF, RR, AFE, AFP)
       L_CIL <- c(L_CIL, RDFCIL, RRCIL, AFECIL, NA)
       L_CIH <- c(L_CIH, RDFCIH, RRCIH, AFECIH, NA)
     }
-    
+
     # MISSING -------------------------------------------------------
     N_ROWS = nrow(x)
     MIS_TO = N_ROWS - NB_TOTAL
@@ -165,7 +165,7 @@ CSInter.data.frame <- function(  x,
     L_STATS <- c(L_STATS, NA)
     L_CIL <- c(L_CIL, NA)
     L_CIH <- c(L_CIH, NA)
-    
+
     DF1 <- data.frame(L_LABELS1, L_TOTAL, L_CASES, S2(L_RISK), L_ESTIMATE, S2(L_STATS), S2(L_CIL), S2(L_CIH))
     colnames(DF1) <- getColnames()
 
@@ -183,23 +183,22 @@ CSInter.data.frame <- function(  x,
         .by <- factor(x[,by], levels = rev(as.integer(levels(factor(x[,by])), na.rm=T)))
       }
       .T <- table(.exp, .ill, .by , dnn=c(exposure, cases, by))
-      print(.T)
+      # print(.T)
       .T <- toNumeric(.T, .loop)
-      res <- epi.2by2(dat = .T, method = "cohort.count", 
-                      conf.level = 0.95, units = 100,  homogeneity = "woolf", 
-                      outcome = "as.columns")
+      res <- epi.2by2(dat = .T, method = "cohort.count",
+                      conf.level = 0.95, units = 100, outcome = "as.columns")
       S <- summary(res)
-      
-      
+
+
       #print(S)
       #return(c(S$RR.homog[1], S$RR.homog[3]));
-      
+
       # R = MH_HomogeneityTest(.T);
       CHI2 = as.numeric(sprintf("%3.5f",S$RR.homog[1]))
       PVAL = as.numeric(sprintf("%3.5f",S$RR.homog[3]))
       L_TOTAL <- c(CHI2)
       L_CASES <- c(PVAL)
-      
+
       # Crude RR ------------------------------------------------------
       xf <- x[!is.na(x[,by]) & !is.na(x[,exposure]),]
       .T <- table(xf[,exposure], xf[,cases])
@@ -210,41 +209,41 @@ CSInter.data.frame <- function(  x,
       L_STATS <- c(CRRR)
       L_CIL   <- c(CRCIL)
       L_CIH   <- c(CRCIH)
-      
+
       # MH RR ---------------------------------------------------------
       M <- matrix(L_TAB, NB_LEVELS, byrow = TRUE)
       R <- MANTEL_RR(M)
       MHRRSTAT = R[1]
       MHRRCIL  = R[2]
       MHRRCIH  = R[3]
-      
+
       L_STATS <- c(L_STATS, MHRRSTAT)
       L_CIL   <- c(L_CIL, MHRRCIL)
       L_CIH   <- c(L_CIH, MHRRCIH)
-      
+
       # Adjusted/crude relative change
       # ------------------------------------------------------------
       RC = 100 * ((MHRRSTAT - CRRR)/CRRR)
       STAT = RC
       L_STATS <- c(L_STATS, STAT)
-      
+
       COL2 = S2(c(L_TOTAL, NA, NA, NA))
       COL3 = round(c(L_CASES, NA, NA, NA),3)
       COL4 = S2(c(NA, L_STATS))
       COL5 = S2(c(NA, L_CIL, NA))
       COL6 = S2(c(NA, L_CIH, NA))
       C1Labels <- c(getMHLabels())
-      
+
       DF2 <- data.frame(C1Labels, COL2, COL3, COL4, COL5, COL6)
       colnames(DF2) <- c("Point Estimate","Chi2", "p.value", "Stats","95%CI-ll", "95%CI-ul")
     }
-    
+
     if (table == TRUE) {
       .Col1 <- sprintf("%s / %s", by, exposure)
       T.Col <- c(.Col1, "Total", "Cases", "Risk %", "RR")
       .ref <- T.Risk[4]
       T.RR <- c(T.Risk[1]/.ref, T.Risk[2]/.ref, T.Risk[3]/.ref, NA)
-      
+
       S.OBRR <- round(T.RR[1], 2)
       S.EXRR <- round((T.RR[2]-1)+(T.RR[3]-1)+1, 2)
       S.INTR <- round((T.RR[1]-1)-(T.RR[2]-1)-(T.RR[3]-1), 2)
@@ -260,7 +259,7 @@ CSInter.data.frame <- function(  x,
                  "Interaction")
       DF4 = data.frame(.Labs, c(S.OBRR, S.EXRR, S.INTR))
       colnames(DF4) <- c("Statistic","Value")
-      
+
     }
     # Return a list
     # -------------------------------------------------------------------------
@@ -295,6 +294,6 @@ CSInter.data.frame <- function(  x,
     }
     ret
   }
-  
+
   getRRStats()
 }

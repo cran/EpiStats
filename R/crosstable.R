@@ -101,11 +101,11 @@ crossTable <- function(data, var1, var2, percent = "none", statistic = "none") {
   if (.percent == "both") {
     col1 <- c(.ColExpo[1], "%", .ColExpo[2], "%", "Total", "%")
     col2 <- c(I1E1, S2(PI1E1), I0E1, S2(PI0E1), TE1, S2(PI1E1+PI0E1))
-    col3 <- c(S2(PE1T1), " ", S2(PE1T0), " ",  S2((TE1/TT)*100), " ")
+    col3 <- c(S2(PE1T1), "-", S2(PE1T0), "-",  S2((TE1/TT)*100), "-")
     col4 <- c(I1E0, S2(PI1E0), I0E0, S2(PI0E0), TE0, S2(PI1E0+PI0E0))
-    col5 <- c(S2(PE0T1), " ", S2(PE0T0), " ", S2((TE0/TT)*100), " ")
-    col6 <- c(TI1, " ", TI0, " ", TT, "100.00")
-    col7 <- c("100.00", " ", "100.00", " ", "100.00", " ")
+    col5 <- c(S2(PE0T1), "-", S2(PE0T0), "-", S2((TE0/TT)*100), "-")
+    col6 <- c(TI1, "-", TI0, "-", TT, "100.00")
+    col7 <- c("100.00", "-", "100.00", "-", "100.00", "-")
 
     DF <- data.frame(col1, col2, col3, col4, col5, col6, col7, stringsAsFactors=FALSE)
 
@@ -120,7 +120,7 @@ crossTable <- function(data, var1, var2, percent = "none", statistic = "none") {
 
   if (.stats == "chi2") {
     .nbcol <- ncol(DF)
-    .cmp <- rep("", .nbcol-4)
+    .cmp <- rep("-", .nbcol-4)
     S = computeKHI2(I1E1, I0E1, I1E0, I0E0);
     DF <- rbind(DF, rep("-", .nbcol))
     DF <- rbind(DF, c("Pearson CHI2", round(S[1], 4), "Pr", round(S[2], 3), .cmp))
@@ -129,7 +129,7 @@ crossTable <- function(data, var1, var2, percent = "none", statistic = "none") {
 
   if (.stats == "fisher") {
     .nbcol <- ncol(DF)
-    .cmp <- rep("", .nbcol-2)
+    .cmp <- rep("-", .nbcol-2)
     S = computeFisher(I1E1, I0E1, I1E0, I0E0);
     DF <- rbind(DF, rep("-", .nbcol))
     DF <- rbind(DF, c("Fisher's exact", round(S[1], 3), .cmp))

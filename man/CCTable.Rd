@@ -8,12 +8,12 @@ Summary table for univariate analysis of case control studies
 \description{
 CCTable is used for univariate analysis of case control studies with several exposures. The results are summarised in one table with one row per exposure making comparisons between exposures easier and providing a useful table for integrating into reports. Note that all variables need to be numeric and binary and coded as "0" and "1".
 
-The results of this function contain: The name of exposure variables, the total number of cases, the number of exposed cases, the percentage of exposed among cases, the number of controls, the number of exposed controls, the percentage of exposed among controls, odds ratios, 95\%CI intervals, p-values. 
+The results of this function contain: The name of exposure variables, the total number of cases, the number of exposed cases, the percentage of exposed among cases, the number of controls, the number of exposed controls, the percentage of exposed among controls, odds ratios, 95\%CI intervals, p-values.
 
 You can optionally choose to display the Fisher's exact p-value instead of the Chi squared p-value, with the option exact = TRUE.
-  
+
 You can specify the sort order, with the option sort = "or" to order by odds ratios. The default sort order is by p-values.
-  
+
 The option full = TRUE provides you with useful formatting information, which can be handy if you're using "markdown".
 }
 \usage{
@@ -66,7 +66,7 @@ df <- Tiramisu
 cctable(df, "ill", exposure=c("sex", "wmousse", "tira", "beer", "mousse"))
 
 # By storing results in res, you can also use individual elements of the results.
-# For example if you would like to view a particular odds ratio, 
+# For example if you would like to view a particular odds ratio,
 # you can view it by typing (for example):
 
 res = CCTable(df, "ill", exposure = c("sex", "wmousse", "tira", "beer", "mousse"), exact=TRUE)
@@ -74,5 +74,4 @@ res$df$`Odds Ratio`[1]
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
-\keyword{ ~kwd1 }
-\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line
+\keyword{ ~documentation }

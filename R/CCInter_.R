@@ -28,20 +28,20 @@ CCInter.data.frame <- function(  x,
   L_CIH       <- c()
   L_STATS     <- c()
   L_ESTIMATE  <- c()
-  
+
   NB_TOTAL    <- 0
-  
+
   T.Controls  <- c()
   T.Cases     <- c()
   T.OR        <- c()
   T.Marks     <- c("++","+-","-+","reference   --", "Total")
   T.TCA <- 0
   T.TCO <- 0
-  
-  
+
+
   .strate <- as.factor(x[,by])
   .strateError = "One of your strata has zero cases in the cells."
-  
+
   .df <- x
   # Return labels of columns of the output data.frame
   # ---------------------------------------------------------------------------
@@ -52,15 +52,15 @@ CCInter.data.frame <- function(  x,
   getColnames2 <- function() {
     c("P.estimate","Stats","95%CI-ll","95%CI-ul")
   }
-  
+
   getPestNames <- function(ODD) {
     if (ODD > 1.0) {
-      c("Odds ratio", "Attrib.risk.exp", "Attrib.risk.pop", NA, NA, NA)
+      c("Odds ratio", "Attrib.risk.exp", "Attrib.risk.pop", "", "", "")
     } else {
-      c("Odds ratio", "Prev. frac. ex.", "Prev. frac. pop", NA, NA, NA)
+      c("Odds ratio", "Prev. frac. ex.", "Prev. frac. pop", "", "", "")
     }
   }
-  
+
   getCrudeOR <- function(d) {
     # df <- x[!is.na(x[cases]) & !is.na(x[exposure]) & !is.na(x[by]),
     #            c(cases, exposure)]
@@ -68,7 +68,7 @@ CCInter.data.frame <- function(  x,
     .r = or(.T)
     .r
   }
-  
+
 
   # Returns labels for each level of 'by'
   # ---------------------------------------------------------------------------
@@ -76,14 +76,14 @@ CCInter.data.frame <- function(  x,
     .label = sprintf("%s = %s", by, .level);
     c(.label, "Exposed", "Unexposed", "Total", "Exposed %", "______________")
   }
-  
+
   getMHLabels <- function() {
     label2 = sprintf("Crude OR for %s", exposure);
-    label3 = sprintf("MH OR %s adjusted for %s", exposure, by);  
-    c("MH test of Homogeneity",
+    label3 = sprintf("MH OR %s adjusted for %s", exposure, by);
+    c("MH test of Homogeneity (p-value)",
       label2, label3, "Adjusted/crude relative change")
   }
- 
+
   # Loop on all levels of 'by' (strates)
   # -----------------------------------------------------------------
   getRRStats <- function() {
@@ -109,11 +109,9 @@ CCInter.data.frame <- function(  x,
       }
       .T
     }
-    
+
     .T <- retrieveLast(.T)
-    S_  <- summary(epi.2by2(.T, method = "case.control",
-                            outcome="as.columns",
-                            homogeneity = "woolf"))
+    S_  <- summary(epi.2by2(.T, method = "case.control", outcome="as.columns"))
 
     .loop = length(.T[1,2,])
     NB_LEVELS = .loop
@@ -129,11 +127,11 @@ CCInter.data.frame <- function(  x,
       T_EX <- A_CE + B_HE
       T_UN <- C_CU + D_HU
       T_CT <- B_HE + D_HU  ; # Total Controls
-      
+
       L_LABELS1 <- c(L_LABELS1, getRisksLabels(.level))
-      
-      # CASES
-      # ------------------------------------------------------------
+
+
+      # CASES -------------------------------------------------------------------
       L_CASES <- c(L_CASES, NA, A_CE, C_CU);
       TOTAL <-  A_CE + C_CU;
       NB_TOTAL = NB_TOTAL + TOTAL;
@@ -154,9 +152,8 @@ CCInter.data.frame <- function(  x,
         T.TCA <- T.TCA + A_CE + C_CU
         T.TCO <- T.TCO + B_HE + D_HU
       }
-      
-      # ODDS RATIO
-      # ------------------------------------------------------------
+
+      # ODDS RATIO --------------------------------------------------------------
       num <- NULL
       .d <- S_$OR.strata.score
       .d <- .d %>% mutate(num = 1:nrow(.d)) %>% arrange(desc(num))
@@ -165,9 +162,11 @@ CCInter.data.frame <- function(  x,
       .d <- .d %>% mutate(num = 1:nrow(.d)) %>% arrange(desc(num))
       .CIL <- .d[j, "lower"]
       .CIH <- .d[j, "upper"]
-      L_STATS <- c(L_STATS, ODD);
-      L_CIL = c(L_CIL, .CIL);
-      L_CIH = c(L_CIH, .CIH);
+      L_STATS <- c(L_STATS, S2(ODD));
+      L_CIL = c(L_CIL, S2(.CIL));
+      L_CIH = c(L_CIH, S2(.CIH));
+
+
 
       # print(i)
       # if (i == 2) {
@@ -176,9 +175,8 @@ CCInter.data.frame <- function(  x,
       # P.est.
       # -------------------------------------------------------------
       L_ESTIMATE <- c(L_ESTIMATE, getPestNames(round(ODD, 8)))
-      
-      # Attribuable Risk Ext.
-      # ------------------------------------------------------------
+
+      # Attribuable Risk Ext. ---------------------------------------------------
       if (ODD >= 1.0) {
         .d <- S_$AFest.strata.wald
         .d <- .d %>% mutate(num = 1:nrow(.d)) %>% arrange(desc(num))
@@ -186,36 +184,38 @@ CCInter.data.frame <- function(  x,
         V_AR  = .d[j, "est"]   # Attrib.risk.exp
         V_CIL = .d[j, "lower"] # Confidence interval low
         V_CIH = .d[j, "upper"] # Confidence interval hight
-        L_STATS <- c(L_STATS, V_AR);
-        L_CIL = c(L_CIL, V_CIL, NA, NA, NA, NA);
-        L_CIH = c(L_CIH, V_CIH, NA, NA, NA, NA);
-        
+        L_STATS <- c(L_STATS, S2(V_AR));
+        L_CIL = c(L_CIL, S2(V_CIL), NA, NA, NA, NA);
+        L_CIH = c(L_CIH, S2(V_CIH), NA, NA, NA, NA);
+
+
+
         # Attribuable Risk Pop.
         # ------------------------------------------------------------
         .d <- S_$PAFest.strata.wald
         .d <- .d %>% mutate(num = 1:nrow(.d)) %>% arrange(desc(num))
         AFP <- .d[j, "est"]
-        L_STATS <- c(L_STATS, AFP, NA, NA, NA);
+        L_STATS <- c(L_STATS, S2(AFP), NA, NA, NA);
       } else {
         V_AR <- 1 - ODD
         V_CIL <- 1 - .CIH
         V_CIH <- 1 - .CIL
-        L_STATS <- c(L_STATS, V_AR);
-        L_CIL = c(L_CIL, V_CIL, NA, NA, NA, NA);
-        L_CIH = c(L_CIH, V_CIH, NA, NA, NA, NA);
+        L_STATS <- c(L_STATS, S2(V_AR));
+        L_CIL = c(L_CIL, S2(V_CIL), NA, NA, NA, NA);
+        L_CIH = c(L_CIH, S2(V_CIH), NA, NA, NA, NA);
         # Prev.frac.pop ---------------------------------------------
         Pe <- B_HE / T_CT
         AFP <- Pe * (1-ODD)
-        L_STATS <- c(L_STATS, AFP, NA, NA, NA)
+        L_STATS <- c(L_STATS, S2(AFP), NA, NA, NA)
       }
     }
-    
+
     if (table == TRUE) {
       T.Cases <- c(T.Cases, T.TCA)
       T.Controls <- c(T.Controls, T.TCO)
       T.OR  <- c(T.OR, NA)
     }
-    
+
 
     # Number of obs
     # ------------------------------------------------------------
@@ -227,7 +227,7 @@ CCInter.data.frame <- function(  x,
     MIS_TO = .nrow - NB_TOTAL;
     MIS_PC = sprintf("%3.2f%s", (MIS_TO / .nrow)*100, '%');
     L_CASES = c(L_CASES, MIS_TO);
-    
+
     L_LABELS1 <- c(L_LABELS1, "Number of obs", "Missing")
     L_CONTROLS <- c(L_CONTROLS, NA, NA)
     L_ESTIMATE <- c(L_ESTIMATE, NA, NA)
@@ -235,21 +235,22 @@ CCInter.data.frame <- function(  x,
     L_CIL <- c(L_CIL, NA, NA)
     L_CIH <- c(L_CIH, NA, NA)
     # print(L_STATS)
-    DF1 <- data.frame(L_LABELS1, L_CASES, L_CONTROLS, L_ESTIMATE, S2(L_STATS), S2(L_CIL), S2(L_CIH))
+    DF1 <- data.frame(L_LABELS1, L_CASES, L_CONTROLS, L_ESTIMATE, L_STATS, L_CIL, L_CIH)
     colnames(DF1) <- getColnames()
 
     # return(DF1)
     df <- x[!is.na(x[,exposure]),]
     df <- df[!is.na(df[,by]),]
     df <- df[!is.na(df[,cases]),]
-    
+
     .T <- table(df[,cases], df[,exposure], df[,by]);
     .T <- toNumeric(.T, .loop)
     R <- CC_STATS(.T);
-    
+
     # MH test of Homogeneity pvalue
     # ------------------------------------------------------------
-    STAT = R$OR.homog$p.value;
+    STAT = R$OR.homog.woolf$p.value;
+
     L_STATS <- c(STAT);
 #    return(R)
 
@@ -260,20 +261,20 @@ CCInter.data.frame <- function(  x,
     CIL = .ror[2]
     CIH = .ror[3]
     L_STATS <- c(L_STATS, STAT);
-    L_CIL = c(NA, CIL);
-    L_CIH = c(NA, CIH);
+    L_CIL = c("", S2(CIL));
+    L_CIH = c("", S2(CIH));
     OR.crude = STAT
-    
+
     # MH OR for exposure adjusted for by
     # ------------------------------------------------------------
     STAT = R$OR.mh.wald$est;
     CIL = R$OR.mh.wald$lower
     CIH = R$OR.mh.wald$upper
     OR.mh = STAT
-    
+
     L_STATS <- c(L_STATS, STAT);
-    L_CIL = c(L_CIL, CIL, NA);
-    L_CIH = c(L_CIH, CIH, NA);
+    L_CIL = c(L_CIL, S2(CIL), "");
+    L_CIH = c(L_CIH, S2(CIH), "");
 
     # Adjusted/crude relative change
     # ------------------------------------------------------------
@@ -281,28 +282,28 @@ CCInter.data.frame <- function(  x,
     L_STATS <- c(L_STATS, STAT);
 
     L_LABELS1 = getMHLabels()
-    
-    DF2 <- data.frame(L_LABELS1, S2(L_STATS), S2(L_CIL), S2(L_CIH))
+
+    DF2 <- data.frame(L_LABELS1, S2(L_STATS), L_CIL, L_CIH)
     colnames(DF2) <- getColnames2()
-    
+
     if (table == TRUE) {
       .Col1 <- sprintf("%s / %s", by, exposure)
       T.Col <- c(.Col1, "Cases", "Controls", "OR")
-      
+
       P11 <- T.Cases[1] / (T.Cases[1]+T.Controls[1])
       P10 <- T.Cases[2] / (T.Cases[2]+T.Controls[2])
       P01 <- T.Cases[3] / (T.Cases[3]+T.Controls[3])
       P00 <- T.Cases[4] / (T.Cases[4]+T.Controls[4])
-      
+
       # print(P11 - P10 - P01 + 1)
       OR11 <- (P11/(1-P11)) / (P00/(1-P00))
       OR10 <- (P10/(1-P10)) / (P00/(1-P00))
       OR01 <- (P01/(1-P01)) / (P00/(1-P00))
       T.OR <- c(round(OR11,2), round(OR10,2), round(OR01,2), NA, NA)
-      
+
       DF3 <- data.frame(T.Marks, T.Cases, T.Controls, T.OR)
       colnames(DF3) <- T.Col
-      
+
       # -------------------- STATS -------------------------------------------
       # local _inter = (`_rr10' -1) + (`_rr01' - 1) + 1
       # inter = (`_rr11' - 1 ) - (`_rr10' -1) - (`_rr01' - 1)
@@ -312,23 +313,23 @@ CCInter.data.frame <- function(  x,
       S.OBOR <- OR11
       S.EXOR <- (OR10 - 1) + (OR01 - 1) + 1
       S.INTR <- OR11 - S.EXOR
-      
+
       DF4 = data.frame(.Labs, c(round(S.OBOR,2), round(S.EXOR,2), round(S.INTR,2)))
       colnames(DF4) <- c("Statistic","Value")
-      
+
     }
     if (full == TRUE) {
       if (.Compute == TRUE) {
-        ret <- list(df1 = DF1, df2=DF2, df1.align="lccrlrrr", df2.align="lccrrr")
+        ret <- list(df1 = DF1, df2=DF2, df1.align="lccrrrr", df2.align="lrcc")
       } else {
-        ret <- list(df1 = DF1, df2=.strateError, df1.align="lccrlrrr", df2.align="lccrrr")
+        ret <- list(df1 = DF1, df2=.strateError, df1.align="lccrrrr", df2.align="lrcc")
       }
       if (table == TRUE) {
         if (.Compute == TRUE) {
-          ret <- list(df1 = DF1, df2=DF2, df1.align="lccrlrrr", df2.align="lccrrr",
+          ret <- list(df1 = DF1, df2=DF2, df1.align="lccrrrr", df2.align="lrcc",
                       df3 = DF3, df4 = DF4)
         } else {
-          ret <- list(df1 = DF1, df2=.strateError, df1.align="lccrlrrr", df2.align="lccrrr",
+          ret <- list(df1 = DF1, df2=.strateError, df1.align="lccrrrr", df2.align="lrcc",
                       df3 = DF3, df4 = DF4)
         }
       }
@@ -345,13 +346,13 @@ CCInter.data.frame <- function(  x,
           ret <- list(df1 = DF1, df2=.strateError, df3 = DF3, df4 = DF4)
         }
       }
-    }    
+    }
 
     ret
-    
+
   }
-  
-  
+
+
   getRRStats()
-  
+
 }

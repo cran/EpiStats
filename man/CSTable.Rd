@@ -31,11 +31,11 @@ CSTable(x, cases, exposure = c(), exact = FALSE, sort = "pvalue", full = FALSE)
   The results of this function contain: The name of exposure variables, the total number
   of exposed, the number of exposed cases, the attack rate among the exposed, the total number of unexposed, the number of
   unexposed cases, the attack rate among the unexposed, risk ratios, 95%CI intervals, 95% p-values.
- 
+
   You can optionally choose to display the Fisher's exact p-value instead of the Chi squared p-value, with the option exact = TRUE.
-  
-  You can specify the sort order, with the option sort="rr" to order by risk ratios. The default sort order is by p-values. 
-  
+
+  You can specify the sort order, with the option sort="rr" to order by risk ratios. The default sort order is by p-values.
+
   The option full = TRUE provides you with useful formatting information, which can be handy if you're using "markdown".
 }
 \value{list :
@@ -64,7 +64,7 @@ df <- Tiramisu
 CSTable(df, "ill", exposure=c("sex", "wmousse", "tira", "beer", "mousse"))
 
 # By storing results in res, you can also use individual elements of the results.
-# For example if you would like to view a particular risk ratio, 
+# For example if you would like to view a particular risk ratio,
 # you can view it by typing (for example):
 res = CSTable(df, "ill", exposure = c("sex", "wmousse", "tira", "beer", "mousse"), exact=TRUE)
 res$df$`Risk Ratio`[1]
@@ -72,5 +72,4 @@ res$df$`Risk Ratio`[1]
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
-\keyword{ ~kwd1 }
-\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line
+\keyword{ ~documentation }

@@ -1,7 +1,7 @@
 # EpiStats
 Package R for epidemiologists
 
-## 2018-09-18 Release 2.2
+## 2018-09-18 Release 1.2
 
 - Function crossTable added
 

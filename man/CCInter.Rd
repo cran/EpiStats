@@ -6,8 +6,8 @@
 \title{Stratified analysis for case control studies}
 \description{CCInter is useful to determine the effects of a third variable on the association between an exposure and an outcome.
   CCInter produces 2 by 2 tables with stratum specific odds ratios, attributable risk among
-  exposed and population attributable risk. 
-  
+  exposed and population attributable risk.
+
   Note that the outcome and exposure variable need to be numeric and binary and coded as "0" and 1". The third variable needs to be numeric, but may have more categories, such as "0", "1" and "2".}
 \usage{
 CCInter(x, cases, exposure, by, table = FALSE, full = FALSE)
@@ -35,7 +35,7 @@ CCInter(x, cases, exposure, by, table = FALSE, full = FALSE)
 CCInter is useful to determine the effects of a third variable on the association between an exposure and an outcome. CCInter produces 2 by 2 tables with stratum specific odds ratios, attributable risk among exposed and population attributable risk.
 Note that the outcome and exposure variable need to be numeric and binary and coded as "0" and 1". The third variable needs to be numeric, but may have more categories, such as "0", "1" and "2".
 CCInter displays a summary with the crude OR, the Mantel Haenszel adjusted OR and the result of a Woolf test for homogeneity of stratum-specific OR.
- 
+
 The option "full = TRUE" provides you with useful formatting information, which can be handy if you're using "markdown".
 }
 \references{ccinter for Stata by *Gilles Desve*}
@@ -70,5 +70,5 @@ res$df2$Stats[3]
 
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
-\keyword{ ~kwd1 }
-\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line
+\keyword{ ~documentation }
+

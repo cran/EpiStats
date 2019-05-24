@@ -8,10 +8,10 @@
 
 \description{
     CC is used with case-control studies to determine the association between an exposure and an outcome.
-    Note that all variables need to be numeric and binary and coded as "0" and "1".  
+    Note that all variables need to be numeric and binary and coded as "0" and "1".
     Point estimates and confidence intervals for the odds ratio are calculated, along with
     attributable or prevented fractions for the exposed and total population.
-    
+
     Additionally you can select if you want to display the Fisher's exact test, by specifying exact = TRUE.
 
 If you specify full = TRUE you can easily access useful statistics from the output tables.}
@@ -37,7 +37,7 @@ CC(data, cases, exposure, exact = FALSE, full = FALSE, title = "CC")
   \item{df1.digits}{integer vector - digit number displayed for kable/xtable}
   \item{df2.digits}{integer vector - digit number displayed for kable/xtable}
   \item{st}{list - individual statistics}
-  
+
   The item st returns the odds ratio and its 95 percent confidence intervals, the attributable fraction among the exposed and its 95 percent confidence intervals, the attributable fraction among the population and its 95 percent confidence intervals, the Chi square value, the Chi square p-value and the Fisher's exact test p-value.
 }
 
@@ -64,7 +64,7 @@ library(EpiStats)
 data(Tiramisu)
 DF <- Tiramisu
 
-# The CC command looks at the association between the outcome variable "ill" 
+# The CC command looks at the association between the outcome variable "ill"
 # and an exposure "mousse"
 
 CC(DF, "ill", "mousse")
@@ -79,5 +79,4 @@ result$st$odds_ratio$point_estimate
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
-\keyword{ ~kwd1 }
-\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line
+\keyword{ ~documentation }
