@@ -14,7 +14,7 @@ DF <- DF %>%
   mutate(agegroup = case_when(age < 30 ~ 0, age >= 30 ~ 1)) %>%
   mutate(tportion = case_when(tportion == 0 ~ 0, tportion == 1 ~ 1, tportion >= 2 ~ 2)) %>%
   mutate(tportion = as.factor(tportion)) %>%
-  as.data.frame()
+  as.data.frame(stringsAsFactors=TRUE)
 
 Colnames <- DF %>% 
   select(-ill, -age, -dateonset, -uniquekey, -tportion, -mportion) %>% 
@@ -141,7 +141,6 @@ res <- CCInter(DF, cases="ill", exposure = "beer", by = "tira", full = TRUE)
 kable(res$df1, align=res$df1.align)
 kable(res$df2)
 
-
 ## ----message=FALSE-------------------------------------------------------
 
 res <- CCInter(DF, cases="ill", exposure = "beer", by = "tportion", full = TRUE)
@@ -150,7 +149,7 @@ kable(res$df2, align=res$df2.align)
 
 
 ## ------------------------------------------------------------------------
-res$df2$Stats[3]
+##res$df2$Stats[3]
 
 ## ----echo=FALSE, eval=FALSE----------------------------------------------
 #  test <- function(data, cases, exposure) {

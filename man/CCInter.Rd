@@ -40,7 +40,7 @@ The option "full = TRUE" provides you with useful formatting information, which 
 }
 \references{ccinter for Stata by *Gilles Desve*}
 
-\author{jp.decorps@epiconcept.fr}
+\author{jean.pierre.decorps@gmail.com}
 
 \note{
   - You can use lowercas command "ccinter" instead of "CCInter"

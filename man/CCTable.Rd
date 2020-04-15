@@ -50,7 +50,7 @@ The option "full = TRUE" provides you with useful formatting information, which 
 \references{
 cctable for Stata by *Gilles Desve* and *Peter Makary*.
 }
-\author{jp.decorps@epiconcept.fr}
+\author{jean.pierre.decorps@gmail.com}
 
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 

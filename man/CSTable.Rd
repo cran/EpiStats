@@ -44,7 +44,7 @@ CSTable(x, cases, exposure = c(), exact = FALSE, sort = "pvalue", full = FALSE)
   \item{align}{character - alignment for kable/xtable}
 }
 \references{cstable for Stata by *Gilles Desve* and *Peter Makary*}
-\author{jp.decorps@epiconcept.fr}
+\author{jean.pierre.decorps@gmail.com}
 \note{
   - You can use the lowercase command "cstable" instead of "CSTable"
 }

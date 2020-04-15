@@ -32,7 +32,7 @@ The option full = TRUE provides you with useful formatting information, which ca
 }
 \references{csinter for Stata by *Gilles Desve*}
 
-\author{jp.decorps@epiconcept.fr}
+\author{jean.pierre.decorps@gmail.com}
 \note{
 - You can use the lowercase command "csinter" instead of "CSInter"
 - The "by" variable (the stratifying variable) can have more than 2 levels

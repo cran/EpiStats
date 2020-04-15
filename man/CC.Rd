@@ -42,7 +42,7 @@ CC(data, cases, exposure, exact = FALSE, full = FALSE, title = "CC")
 }
 
 \references{Stata 13: cc https://www.stata.com/manuals13/stepitab.pdf}
-\author{jp.decorps@epiconcept.fr}
+\author{jean.pierre.decorps@gmail.com}
 
 \note{You can use the lowercase command "cc" in place of "CC"
 

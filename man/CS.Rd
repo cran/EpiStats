@@ -38,7 +38,7 @@ The item st returns the risk difference and its 95 percent confidence intervals,
 }
 
 \references{Stata 13: cs. https://www.stata.com/manuals13/stepitab.pdf}
-\author{jp.decorps@epiconcept.fr}
+\author{jean.pierre.decorps@gmail.com}
 \note{You can use the lowercase command "cs" in place of "CS"}
 
 %% ~Make other sections like Warning with \section{Warning }{....} ~

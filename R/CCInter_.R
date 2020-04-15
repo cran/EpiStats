@@ -235,10 +235,10 @@ CCInter.data.frame <- function(  x,
     L_CIL <- c(L_CIL, NA, NA)
     L_CIH <- c(L_CIH, NA, NA)
     # print(L_STATS)
-    DF1 <- data.frame(L_LABELS1, L_CASES, L_CONTROLS, L_ESTIMATE, L_STATS, L_CIL, L_CIH)
+    DF1 <- data.frame(L_LABELS1, L_CASES, L_CONTROLS, L_ESTIMATE, L_STATS, L_CIL, L_CIH, stringsAsFactors=TRUE)
     colnames(DF1) <- getColnames()
 
-    # return(DF1)
+    #return(DF1)
     df <- x[!is.na(x[,exposure]),]
     df <- df[!is.na(df[,by]),]
     df <- df[!is.na(df[,cases]),]
@@ -252,7 +252,6 @@ CCInter.data.frame <- function(  x,
     STAT = R$OR.homog.woolf$p.value;
 
     L_STATS <- c(STAT);
-#    return(R)
 
     # Crude OR for exposure
     # ------------------------------------------------------------
@@ -273,8 +272,8 @@ CCInter.data.frame <- function(  x,
     OR.mh = STAT
 
     L_STATS <- c(L_STATS, STAT);
-    L_CIL = c(L_CIL, S2(CIL), "");
-    L_CIH = c(L_CIH, S2(CIH), "");
+    L_CIL = c(L_CIL, S2(CIL), "_");
+    L_CIH = c(L_CIH, S2(CIH), "_");
 
     # Adjusted/crude relative change
     # ------------------------------------------------------------

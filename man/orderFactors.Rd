@@ -21,7 +21,7 @@
 
 \value{data.frame - contingency table}
 
-\author{jp.decorps@epiconcept.fr}
+\author{jean.pierre.decorps@gmail.com}
 
 
 \seealso{ crossTable }
