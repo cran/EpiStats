@@ -77,13 +77,14 @@ CC_PAR <- function(C)
 {
   .T = epi.2by2(dat=C, method="case.control", outcome="as.columns");
   S <- summary(.T);
+  return(S)
   return(S$PAFest.strata.wald$est);
 }
 
 CC_STATS <- function(C)
 {
   .T = epi.2by2(dat=C, method="case.control", outcome="as.columns");
-  S <- summary(.T);
+  S <- summary(.T)$massoc.detail;
   return(S);
 }
 

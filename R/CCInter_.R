@@ -54,6 +54,7 @@ CCInter.data.frame <- function(  x,
   }
 
   getPestNames <- function(ODD) {
+    sprintf("getPestNames:ODD : %4.4f", ODD)
     if (ODD > 1.0) {
       c("Odds ratio", "Attrib.risk.exp", "Attrib.risk.pop", "", "", "")
     } else {
@@ -112,6 +113,7 @@ CCInter.data.frame <- function(  x,
 
     .T <- retrieveLast(.T)
     S_  <- summary(epi.2by2(.T, method = "case.control", outcome="as.columns"))
+    R <- S_$massoc.detail
 
     .loop = length(.T[1,2,])
     NB_LEVELS = .loop
@@ -153,19 +155,23 @@ CCInter.data.frame <- function(  x,
         T.TCO <- T.TCO + B_HE + D_HU
       }
 
+
       # ODDS RATIO --------------------------------------------------------------
       num <- NULL
-      .d <- S_$OR.strata.score
+
+      .d <- R$OR.strata.wald
+      # print(R)
       .d <- .d %>% mutate(num = 1:nrow(.d)) %>% arrange(desc(num))
       ODD  <- .d[j, "est"]
-      .d <- S_$OR.strata.mle
+
+
+      .d <- R$OR.strata.mle
       .d <- .d %>% mutate(num = 1:nrow(.d)) %>% arrange(desc(num))
       .CIL <- .d[j, "lower"]
       .CIH <- .d[j, "upper"]
       L_STATS <- c(L_STATS, S2(ODD));
       L_CIL = c(L_CIL, S2(.CIL));
       L_CIH = c(L_CIH, S2(.CIH));
-
 
 
       # print(i)
@@ -175,10 +181,9 @@ CCInter.data.frame <- function(  x,
       # P.est.
       # -------------------------------------------------------------
       L_ESTIMATE <- c(L_ESTIMATE, getPestNames(round(ODD, 8)))
-
       # Attribuable Risk Ext. ---------------------------------------------------
       if (ODD >= 1.0) {
-        .d <- S_$AFest.strata.wald
+        .d <- R$AFest.strata.wald
         .d <- .d %>% mutate(num = 1:nrow(.d)) %>% arrange(desc(num))
         #R <- CC_AR(.T);
         V_AR  = .d[j, "est"]   # Attrib.risk.exp
@@ -192,10 +197,13 @@ CCInter.data.frame <- function(  x,
 
         # Attribuable Risk Pop.
         # ------------------------------------------------------------
-        .d <- S_$PAFest.strata.wald
+
+        .d <- R$PAFest.strata.wald
         .d <- .d %>% mutate(num = 1:nrow(.d)) %>% arrange(desc(num))
         AFP <- .d[j, "est"]
         L_STATS <- c(L_STATS, S2(AFP), NA, NA, NA);
+        # print(R)
+
       } else {
         V_AR <- 1 - ODD
         V_CIL <- 1 - .CIH

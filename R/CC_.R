@@ -88,8 +88,8 @@ CC.data.frame <- function(  data,
     # AFEST = as.numeric(R$AFest[1])
 
     AFEST = as.numeric((ODD-1) / ODD)
-    AFCIL = as.numeric(R$AFest[2])
-    AFCIH = as.numeric(round(R$AFest[3], 8))
+    AFCIL = as.numeric(R$AFest.strata.wald[2])
+    AFCIH = as.numeric(round(R$AFest.strata.wald[3], 8))
 
     PAEST <- AFEST * PCAEX
     Rownames2 <- c("Odds ratio", "Attr. frac. ex.", "Attr. frac. pop", PLabel)

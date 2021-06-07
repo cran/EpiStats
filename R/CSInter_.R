@@ -187,15 +187,13 @@ CSInter.data.frame <- function(  x,
       .T <- toNumeric(.T, .loop)
       res <- epi.2by2(dat = .T, method = "cohort.count",
                       conf.level = 0.95, units = 100, outcome = "as.columns")
-      S <- summary(res)
+      S <- summary(res)$massoc.detail
 
-
-      #print(S)
-      #return(c(S$RR.homog[1], S$RR.homog[3]));
 
       # R = MH_HomogeneityTest(.T);
-      CHI2 = as.numeric(sprintf("%3.5f",S$RR.homog[1]))
-      PVAL = as.numeric(sprintf("%3.5f",S$RR.homog[3]))
+      CHI2 = as.numeric(sprintf("%3.5f",S$wRR.homog[1]))
+      PVAL = as.numeric(sprintf("%3.5f",S$wRR.homog[3]))
+
       L_TOTAL <- c(CHI2)
       L_CASES <- c(PVAL)
 
