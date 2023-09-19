@@ -1,6 +1,6 @@
 ---
 title: "EpiStats"
-author: "jean.pierre.decorps@gmail.com"
+author: "Jean Pierre Decorps"
 date: "`r Sys.Date()`"
 output: rmarkdown::pdf_document
 geometry: margin=0.5in
@@ -11,16 +11,20 @@ vignette: >
 ---
 
 
+
+Epiconcept is made up of a team of doctors, epidemiologists, data scientists and digital specialists.
+For more than 20 years, Epiconcept has contributed to the improvement of public health by writing software, carrying out epidemiological studies, research, evaluation and training to better detect, monitor and prevent disease and to improve treatment.
+
+
 --------------------------------------------------------------------------------------------
 
 
-\newpage
 # Package Epistats
 
 ## Description
 
 The EpiStats package is a set of functions aimed at epidemiologists. They include commands for measures of association and impact for case control studies and cohort studies. They may be particularly useful for outbreak investigations and include univariate and stratified analyses.
-
+    
 The generic function *crossTable* provides a contingency table with optional parameters *percent* and *statistic*
 
 The functions for cohort studies include the *CS*, *CSTable* and *CSInter* commands. 
@@ -79,7 +83,7 @@ and EpiConcept.
 
 --------------------------------------------------
 
-\newpage
+
 # Working with Epistats and "Tiramisu" dataset
 
 ## Loading and recoding the dataset
@@ -251,7 +255,7 @@ kable(res$df, digits=res$digits, align=res$align)
 By storing the results in the object "res", you are able to use the result table in Markdown as shown above. You can also use individual elements of the results. For example if you would like to view just the risk ratio, you can view it by typing (for example):
 
 ```{r}
-res$df$`Risk Ratio`[2]
+res$df$RR[2]
 ```
 
 
@@ -278,7 +282,6 @@ The option "full = TRUE" provides you with useful formatting information, which 
 
 
 ```{r}
-
 CSInter(DF, cases="ill", exposure = "wmousse", by = "tira")
 ```
 
@@ -461,20 +464,5 @@ kable(res$df2, align=res$df2.align)
 By storing the results in the object "res", you are able to use the result table in Markdown as shown above. You can also use individual elements of the results. For example if you would like to view just the Mantel-Haenszel odds ratio for beer adjusted for tportion, you can view it by typing:
 
 ```{r}
-##res$df2$Stats[3]
+res$df2$Stats[3]
 ```
-
-
-```{r echo=FALSE, eval=FALSE}
-test <- function(data, cases, exposure) {
-  .cases <- as.character(substitute(cases))
-  print(.cases)
-  data[, .cases]
-}
-# with(DF,
-test(Tiramisu, "ill", tira)
-# )
-```
-
-
-)

@@ -26,17 +26,17 @@ computeRiskCI <- function(risk, X1, N1, X2, N2)
   return(c(E2, E1));
 }
 
-# CASES CONTROLS STUDY
-# ========================================================================
-CC.table <-function(x, cases, exposure, strate, level) {
-  A  = table(x[strate == level, exposure], x[strate == level, cases])
-  CE = A[2,2]    ; # Cases exposed
-  CU = A[1,2]    ; # Cases unexposed
-  HE = A[2,1]    ; # Healthy exposed
-  HU = A[1,1]    ; # Healthy unexposed
-  M <- matrix(c(CE,HE,CU,HU),ncol = 2, byrow = TRUE)
-  as.table(M)
-}
+# # CASES CONTROLS STUDY
+# # ========================================================================
+# CC.table <-function(x, cases, exposure, strate, level) {
+#   A  = table(x[strate == level, exposure], x[strate == level, cases])
+#   CE = A[2,2]    ; # Cases exposed
+#   CU = A[1,2]    ; # Cases unexposed
+#   HE = A[2,1]    ; # Healthy exposed
+#   HU = A[1,1]    ; # Healthy unexposed
+#   M <- matrix(c(CE,HE,CU,HU),ncol = 2, byrow = TRUE)
+#   as.table(M)
+# }
 
 # Comppute ODDS ratio
 # -----------------------------------------------------------------------------

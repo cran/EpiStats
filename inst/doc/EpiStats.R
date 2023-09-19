@@ -79,10 +79,9 @@ res = CSTable(DF, "ill", exact = TRUE, exposure = Colnames, full = TRUE)
 kable(res$df, digits=res$digits, align=res$align)
 
 ## -----------------------------------------------------------------------------
-res$df$`Risk Ratio`[2]
+res$df$RR[2]
 
 ## -----------------------------------------------------------------------------
-
 CSInter(DF, cases="ill", exposure = "wmousse", by = "tira")
 
 ## -----------------------------------------------------------------------------
@@ -149,15 +148,5 @@ kable(res$df2, align=res$df2.align)
 
 
 ## -----------------------------------------------------------------------------
-##res$df2$Stats[3]
-
-## ----echo=FALSE, eval=FALSE---------------------------------------------------
-#  test <- function(data, cases, exposure) {
-#    .cases <- as.character(substitute(cases))
-#    print(.cases)
-#    data[, .cases]
-#  }
-#  # with(DF,
-#  test(Tiramisu, "ill", tira)
-#  # )
+res$df2$Stats[3]
 
