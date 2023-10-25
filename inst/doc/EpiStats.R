@@ -10,14 +10,18 @@ data(Tiramisu)
 DF <- Tiramisu
 
 DF <- DF %>%
-  # filter(age != "NA") %>%
+  # Recoding all variables as binary '0' or '1'
+  mutate(salmon = ifelse(salmon == 9, NA, salmon)) %>% 
+  mutate(horseradish = ifelse(horseradish == 9, NA, horseradish)) %>% 
+  mutate(pork = ifelse(pork == 9, NA, pork)) %>% 
+  mutate(sex01 = case_when(sex == "females" ~ 1, sex == "males" ~ 0)) %>% 
   mutate(agegroup = case_when(age < 30 ~ 0, age >= 30 ~ 1)) %>%
   mutate(tportion = case_when(tportion == 0 ~ 0, tportion == 1 ~ 1, tportion >= 2 ~ 2)) %>%
   mutate(tportion = as.factor(tportion)) %>%
   as.data.frame(stringsAsFactors=TRUE)
 
 Colnames <- DF %>% 
-  select(-ill, -age, -dateonset, -uniquekey, -tportion, -mportion) %>% 
+  select(-ill, -age, -sex, -dateonset, -uniquekey, -tportion, -mportion) %>% 
   colnames()
 
 
@@ -65,7 +69,7 @@ result$st$risk_ratio$point_estimate
 ## -----------------------------------------------------------------------------
 CSTable(DF,
         "ill",
-        exposure = c("sex", "agegroup", "tira", "beer", "mousse", "wmousse", "dmousse",
+        exposure = c("sex01", "agegroup", "tira", "beer", "mousse", "wmousse", "dmousse",
                      "redjelly", "fruitsalad", "tomato", "mince", "salmon", "horseradish",
                      "chickenwin", "roastbeef", "pork"))
 
@@ -114,7 +118,7 @@ result$st$odds_ratio$point_estimate
 
 ## -----------------------------------------------------------------------------
 CCTable(DF, "ill",
-        exposure = c("sex", "agegroup", "tira", "beer", "mousse", "wmousse", "dmousse",
+        exposure = c("sex01", "agegroup", "tira", "beer", "mousse", "wmousse", "dmousse",
                      "redjelly", "fruitsalad", "tomato", "mince", "salmon", "horseradish",
                      "chickenwin", "roastbeef", "pork"))
 
